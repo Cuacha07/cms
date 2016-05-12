@@ -2,14 +2,14 @@
 
 This is a PHP CMS powered by Laravel 5.1, it's based on Reactor CMS by gmlo89 (link: https://github.com/gmlo89/reactor-cms)
 
-Modules included:
+# Modules included:
 
 Users (CRUD, Auth)
 Categories (CRUD)
 Articles (CRUD)
 
 
-Differences between Komvac-cms and Reactor-CMS:
+# Differences between Komvac-cms and Reactor-CMS:
 
 - added new commands: php artisan cms:createmodule and cms:deletemodule are included
     - cms:createmodule: create a new module and migration file for the cms.
@@ -17,7 +17,7 @@ Differences between Komvac-cms and Reactor-CMS:
 - new module templates to be added soon.
 
 
-Installation
+# Installation
 
 First, pull in the package through Composer.
 
@@ -67,7 +67,7 @@ Enjoy it!
 
 Go to the web browser and put your-domain/admin.
 
-Credits
+# Credits
 
 This package uses a number of open source projects to work properly:
 
