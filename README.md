@@ -55,7 +55,7 @@ $ composer update
 ```
 **Configure your preference database.**
 
-**Configure the CMS**
+###Configure the CMS
 
 $ php artisan cms:start
 **Run this command and type the required data.**
@@ -74,9 +74,9 @@ $ php artisan cms:start
 
 This package uses a number of open source projects to work properly:
 
-Laravel 5.1 - The PHP Framework For Web Artisans
-AdminLTE - Dashboard & Control Panel Template
-VueJS - Intuitive, Fast and Composable MVVM for building interactive interfaces.
-TinyMCE - HTML WYSIWYG editor
-gmlo89's Reactor CMS
+*Laravel 5.1 - The PHP Framework For Web Artisans
+*AdminLTE - Dashboard & Control Panel Template
+*VueJS - Intuitive, Fast and Composable MVVM for building interactive interfaces.
+*TinyMCE - HTML WYSIWYG editor
+*gmlo89's Reactor CMS
 And others...
