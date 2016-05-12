@@ -2,14 +2,14 @@
 
 This is a PHP CMS powered by Laravel 5.1, it's based on Reactor CMS by gmlo89 (link: https://github.com/gmlo89/reactor-cms)
 
-# Modules included:
+## Modules included:
 
 Users (CRUD, Auth)
 Categories (CRUD)
 Articles (CRUD)
 
 
-# Differences between Komvac-cms and Reactor-CMS:
+## Differences between Komvac-cms and Reactor-CMS:
 
 - added new commands: php artisan cms:createmodule and cms:deletemodule are included
     - cms:createmodule: create a new module and migration file for the cms.
@@ -17,19 +17,20 @@ Articles (CRUD)
 - new module templates to be added soon.
 
 
-# Installation
+## Installation
 
-First, pull in the package through Composer.
-
+**First, pull in the package through Composer.**
+```php
 “require”: {
     ...
     "nhitrort90/cms": "dev-master”
 }
-And run composer:
+```
+**And run composer:**
 
 $ composer update
-And then, include the service provider within config/app.php.
-
+**And then, include the service provider within config/app.php.**
+```php
 'providers' => [
     ...
     // own
@@ -51,23 +52,25 @@ And then, include the service provider within config/app.php.
     'Form' => Collective\Html\FormFacade::class,
     'Html' => Collective\Html\HtmlFacade::class,
 ],
-Configure your preference database.
+```
+**Configure your preference database.**
 
-Configure the CMS
+**Configure the CMS**
 
 $ php artisan cms:start
-Run this command and type the required data.
+**Run this command and type the required data.**
 
-Make sure update the auth.php config file with the User Model of the CMS.
-
+**Make sure update the auth.php config file with the User Model of the CMS.**
+```php
     'model' => \Nhitrort90\CMS\Modules\Users\User::class,
-Also you can set more configurations on config/cms.php.
+```
+**Also you can set more configurations on config/cms.php.**
 
-Enjoy it!
+**Enjoy it!**
 
-Go to the web browser and put your-domain/admin.
+**Go to the web browser and put your-domain/admin.**
 
-# Credits
+## Credits
 
 This package uses a number of open source projects to work properly:
 
