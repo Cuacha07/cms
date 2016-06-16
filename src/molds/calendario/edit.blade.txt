@@ -1,0 +1,36 @@
+@extends('CMS::master')
+
+@section('content')
+<section class="content-header">
+  <h1>
+    <i class="fa fa-file"></i> @lang('CMS::calendarios.edit_calendario')
+  </h1>
+</section>
+
+<section class="content">
+    {!! Form::model($calendario, ['route' => ['CMS::admin.calendarios.update', $calendario->id], 'method' => 'PUT']) !!}
+    <div class="box box-primary">
+        <div class="box-header">
+            <h3 class="box-title"></h3>
+            <div class="box-tools pull-right">
+                <a href="{{ route('CMS::admin.calendarios.index') }}" class="btn btn-default"><i class="fa fa-chevron-circle-left"></i> @lang('CMS::core.back')</a>
+                <button type="submit" class="btn bg-navy"><i class="fa fa-floppy-o"></i> @lang('CMS::core.save')</button>
+            </div>
+        </div>
+        <div class="box-body"></div>
+    </div>
+
+    @include('CMS::calendarios.partials.inputs')
+
+    {!! Form::close()  !!}
+</section>
+
+{!! Field::renderDeleteButtonDialogs() !!}
+
+{!! Form::open(['route' => ['CMS::admin.calendarios.toggle-status', $calendario->id], 'id' => 'frmToggleStatus', 'method' => 'PUT']) !!}
+{!! Form::close() !!}
+@stop
+
+@section('scripts')
+    @include('CMS::calendarios.partials.scripts')
+@stop

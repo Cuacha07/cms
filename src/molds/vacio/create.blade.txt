@@ -1,0 +1,17 @@
+@extends('CMS::master')
+
+@section('content')
+<section class="content-header">
+  <h1>
+    <i class="fa fa-file"></i> @lang('CMS::articles.test_articles')
+  </h1>
+</section>
+
+<section class="content">
+    @include('CMS::articles.partials.inputs')
+</section>
+@stop
+
+@section('scripts')
+    @include('CMS::articles.partials.scripts')
+@stop

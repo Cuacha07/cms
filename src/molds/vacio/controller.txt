@@ -1,0 +1,47 @@
+<?php
+
+namespace Nhitrort90\CMS\Controllers;
+use Carbon\Carbon;
+use Nhitrort90\CMS\Modules\Articles\ArticlesRepo;
+use Nhitrort90\CMS\Requests\CreateArticle;
+use Nhitrort90\CMS\Requests\UpdateArticle;
+use Illuminate\Http\Request;
+
+use App\Http\Requests;
+use App\Http\Controllers\Controller;
+
+class ArticlesController extends Controller
+{
+
+    public function index()
+    {
+        return view('CMS::articles.index');
+    }
+
+    public function create()
+    {
+
+    }
+
+
+    public function store(CreateArticle $request)
+    {
+
+    }
+
+    public function edit($id)
+    {
+
+    }
+
+
+    public function update($id, UpdateArticle $request)
+    {
+
+    }
+
+    public function destroy($id)
+    {
+
+    }
+}

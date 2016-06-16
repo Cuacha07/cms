@@ -1,0 +1,10 @@
+<?php
+
+namespace Nhitrort90\CMS\Modules\Articles;
+
+use Nhitrort90\CMS\Modules\Lib\Presenter;
+
+class ArticlePresenter extends Presenter
+{
+
+}

@@ -1,0 +1,116 @@
+<?php
+
+namespace Nhitrort90\CMS\Controllers;
+use Carbon\Carbon;
+use Nhitrort90\CMS\Modules\Calendarios\CalendariosRepo;
+use Nhitrort90\CMS\Requests\CreateCalendario;
+use Nhitrort90\CMS\Requests\UpdateCalendario;
+use Nhitrort90\CMS\Requests\DeleteCalendario;
+use Illuminate\Http\Request;
+
+use App\Http\Requests;
+use App\Http\Controllers\Controller;
+use Nhitrort90\CMS\Modules\Calendarios\Calendario as calendario;
+
+class CalendariosController extends Controller
+{
+
+    public function __construct()
+    {
+    }
+
+    public function index()
+    {
+        $calendarios = calendario::all();
+
+        return view('CMS::calendarios.index', compact('calendarios'));
+    }
+
+    public function create()
+    {
+        return view('CMS::calendarios.create');
+    }
+
+
+    public function store(CreateCalendario $request)
+    {
+        $nombre=$request->nombre;
+        $descripcion=$request->descripcion;
+        $evento_todoeldia=$request->evento_todoeldia;
+        $fecha_inicio=$request->fecha_inicio;
+        $hora_inicio=$request->hora_inicio.":00";
+        $fecha_fin=$request->fecha_fin;
+        $hora_fin=$request->hora_fin.":00";
+        $color=$request->color;
+        $calendario=new calendario();
+        $calendario->nombre=$nombre;
+        $calendario->descripcion=$descripcion;
+        $calendario->todoeldia=$evento_todoeldia;
+        $calendario->fecha_desde=date('Y-m-d',strtotime($fecha_inicio));
+        $calendario->hora_desde=$hora_inicio;
+        $calendario->fecha_hasta=date('Y-m-d',strtotime($fecha_fin));
+        $calendario->hora_hasta=$hora_fin;
+        $calendario->color=$color;
+        $calendario->save();
+        return ['id'=>$calendario->id];
+    }
+
+    public function edit($id)
+    {
+        $calendario = $this->calendariosRepo->findOrFail($id);
+        $calendario->nombre=$request->nombre;
+        $calendario->descripcion=$request->descripcion;
+        $calendario->todoeldia=$request->evento_todoeldia;
+        $calendario->fecha_desde=date('Y-m-d',strtotime($request->fecha_inicio));
+        $calendario->hora_desde=$request->hora_inicio.":00";
+        $calendario->fecha_hasta=date('Y-m-d',strtotime($request->fecha_fin));
+        $calendario->hora_hasta=$hora_fin.":00";
+        $calendario->color=$request->color;
+        return view('CMS::calendarios.edit', compact('calendario'));
+    }
+
+
+    public function update(UpdateCalendario $request)
+    {
+        $calendario=calendario::find($request->id);
+        $calendario->nombre=$request->nombre;
+        $calendario->descripcion=$request->descripcion;
+        $calendario->todoeldia=$request->evento_todoeldia;
+        $calendario->fecha_desde=date('Y-m-d',strtotime($request->fecha_inicio));
+        $calendario->hora_desde=$request->hora_inicio.":00";
+        $calendario->fecha_hasta=date('Y-m-d',strtotime($request->fecha_fin));
+        $calendario->hora_hasta=$request->hora_fin.":00";
+        $calendario->color=$request->color;
+        $calendario->save();   
+        return ['resultado'=>'Los datos se han enviado correctamente!!!'];    
+    }
+
+    public function destroy(DeleteCalendario $request)
+    {
+        $calendario=calendario::find($request->id);
+        $calendario->delete();   
+        return ['resultado'=>'Los datos se han enviado correctamente!!!'];    
+    }
+
+
+    public function toggleStatus($id)
+    {
+        $calendario = $this->calendariosRepo->findOrFail($id);
+        $data = '';
+        $message = null;
+        if($calendario->published_at == null)
+        {
+            $data['published_at'] = Carbon::now();
+            $message = 'CMS::calendarios.msg_calendario_published';
+        }
+        else
+        {
+            $data['published_at'] = null;
+            $message = 'CMS::calendarios.msg_calendario_unpublished';
+        }
+
+        $this->calendariosRepo->update($calendario, $data);
+        \Alert::success($message);
+        return redirect()->route('CMS::admin.calendarios.edit', $calendario->id);
+    }
+}

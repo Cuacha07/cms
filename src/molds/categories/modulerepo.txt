@@ -1,0 +1,15 @@
+<?php
+
+namespace Nhitrort90\CMS\Modules\Categories;
+
+use Nhitrort90\CMS\Modules\Lib\BaseRepo;
+
+class CategoriesRepo extends BaseRepo
+{
+
+    public function getModel()
+    {
+        return new Category;
+    }
+
+}

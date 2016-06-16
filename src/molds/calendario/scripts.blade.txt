@@ -1,0 +1,761 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
+<script src="https://almsaeedstudio.com/themes/AdminLTE/plugins/fullcalendar/fullcalendar.min.js"></script>
+<script src="https://almsaeedstudio.com/themes/AdminLTE/dist/js/demo.js"></script>
+<script src="https://almsaeedstudio.com/themes/AdminLTE/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+
+<script>
+
+$(document).ready(function()
+{
+
+    var i;
+    var cadena="";
+    horadesde=$('#hora_desde');
+    horahasta=$('#hora_hasta');
+    horadesdemod=$('#hora_desdemod');
+    horahastamod=$('#hora_hastamod');
+    llenarcombos();
+    fecha_evento=null;
+    evento_allday=null;
+    evento=null;
+    evento_sel=null;
+    encima=false;
+    $("#hora_desde").on('change',function()
+    {
+    });
+
+
+    $("#hora_hasta").on('change',function()
+    {
+    });
+
+
+    $( "#desde" ).datepicker({
+      defaultDate: "+1w",
+      changeMonth: true,
+      numberOfMonths: 1,
+      dateFormat:"dd-mm-yy",
+      onClose: function( selectedDate ) 
+      {
+        $( "#hasta" ).datepicker( "option", "minDate", selectedDate );
+      }
+    });
+    $( "#hasta" ).datepicker({
+      defaultDate: "+1w",
+      changeMonth: true,
+      numberOfMonths: 1,
+      dateFormat:"dd-mm-yy",
+      onClose: function( selectedDate ) 
+      {
+        $( "#desde" ).datepicker( "option", "maxDate", selectedDate );
+      }
+    });
+
+    $( "#desdemod" ).datepicker({
+      defaultDate: "+1w",
+      changeMonth: true,
+      numberOfMonths: 1,
+      dateFormat:"dd-mm-yy",
+      onClose: function( selectedDate ) 
+      {
+        $( "#hastamod" ).datepicker( "option", "minDate", selectedDate );
+      }
+    });
+    $( "#hastamod" ).datepicker({
+      defaultDate: "+1w",
+      changeMonth: true,
+      numberOfMonths: 1,
+      dateFormat:"dd-mm-yy",
+      onClose: function( selectedDate ) 
+      {
+        $( "#desdemod" ).datepicker( "option", "maxDate", selectedDate );
+      }
+    });
+
+  function llenarcombos()
+  {
+    cadena="";
+    var isig=0;
+    for(i=0;i<24;i++)
+    {
+      if(i<10)
+      {
+
+        cadena=cadena+'<option value="'+isig+'">0'+i+':00</option>';
+        isig++;
+        cadena=cadena+'<option value="'+isig+'">0'+i+':30</option>';
+      }
+      else
+      {
+        cadena=cadena+'<option value="'+isig+'">'+i+':00</option>';
+        isig++;
+        cadena=cadena+'<option value="'+isig+'">'+i+':30</option>';
+      }
+      isig++;
+    }
+    horadesde.html(cadena);
+    horahasta.html(cadena);
+    $("#hora_desdemod").html(cadena);
+    $("#hora_hastamod").html(cadena);
+  }
+  comprobar_mismodia=function()
+  {
+    var mdesde=$("#desde").val().split("-");
+    var mhasta=$("#hasta").val().split("-");
+    var inicio=new Date(mdesde[2],mdesde[1]-1,mdesde[0]);
+    var final=new Date(mhasta[2],mhasta[1]-1,mhasta[0]);
+    if(inicio<final)
+    {
+      return false;
+    }
+    return true;
+  };
+  comprobar_mismodiamod=function()
+  {
+    var mdesde=$("#desdemod").val().split("-");
+    var mhasta=$("#hastamod").val().split("-");
+    var inicio=new Date(mdesde[2],mdesde[1]-1,mdesde[0]);
+    var final=new Date(mhasta[2],mhasta[1]-1,mhasta[0]);
+    if(inicio<final)
+    {
+      return false;
+    }
+    return true;
+  };
+  seleccionavalor=function(texto)
+  {
+    var m=texto.split(":");
+    var hora=parseInt(m[0]);
+    var min=parseInt(m[1]);
+    hora=(hora)*2;
+    if(min==30)
+    {
+      hora=hora+1;
+    }
+    //alert(hora);
+    return hora;
+  };
+  inicializarfecha = function(fecha,titulo,color)
+  {
+    $( "#desde" ).val(fecha);
+    $("#descripcion").val("");
+    $( "#hasta" ).val(fecha);
+    $("#title").val(titulo);
+    $("#title").css("background-color",color);
+    $("#title").css("color","white");
+    $("#title").css("font-weight","bolder");
+    horadesde.val(0);
+    horahasta.val(0);
+    $("#cont_hora_desde").show();
+    $("#cont_hora_hasta").show();
+    $("#evento_todoeldia").prop('checked',false);
+  };
+  cambiacolor=function(cuadrocolor)
+  {
+    //alert($("."+cuadrocolor).css("color"));
+    $("#title").css("background-color",$("."+cuadrocolor).css("color"));
+  };
+  cambiacolormod=function(cuadrocolor)
+  {
+    //alert($("."+cuadrocolor).css("color"));
+    $("#titlemod").css("background-color",$("."+cuadrocolor).css("color"));
+  };
+  todoeldia=function()
+  {
+    if($("#evento_todoeldia").is(":checked"))
+    {
+      $("#cont_hora_desde").hide();
+      $("#cont_hora_hasta").hide();
+    }
+    else
+    {
+      $("#cont_hora_desde").show();
+      $("#cont_hora_hasta").show();
+    }
+  };
+  comprobar_todoeldia=function()
+  {
+    if($("#evento_todoeldia").is(":checked"))
+    {
+      return 1;
+    }
+    return 0;
+  };
+  comprobar_todoeldiamod=function()
+  {
+    if($("#evento_todoeldiamod").is(":checked"))
+    {
+      return 1;
+    }
+    return 0;
+  };
+  rgb2hex=function(color) 
+  {
+    if (color.substr(0, 1) === '#') 
+    {
+        return color;
+    }
+    var digits = /(.*?)rgb\((\d+), (\d+), (\d+)\)/.exec(color);
+    var red = parseInt(digits[2]);
+    var green = parseInt(digits[3]);
+    var blue = parseInt(digits[4]);
+    var rgb = blue | (green << 8) | (red << 16);
+    return digits[1] + '#' + rgb.toString(16);
+  };
+  amesnumero=function(cadena)
+  {
+    switch(cadena)
+    {
+      case "Jan":
+        {
+          return "01";
+          break;
+        }
+      case "Feb":
+        {
+          return "02";
+          break;
+        }
+      case "Mar":
+        {
+          return "03";
+          break;
+        }
+      case "Apr":
+        {
+          return "04";
+          break;
+        }
+      case "May":
+        {
+          return "05";
+          break;
+        }
+      case "Jun":
+        {
+          return "06";
+          break;
+        }
+      case "Jul":
+        {
+          return "07";
+          break;
+        }
+      case "Aug":
+        {
+          return "08";
+          break;
+        }
+      case "Sep":
+        {
+          return "09";
+          break;
+        }
+      case "Oct":
+        {
+          return "10";
+          break;
+        }
+      case "Nov":
+        {
+          return "11";
+          break;
+        }
+      case "Dec":
+        {
+          return "12";
+          break;
+        }
+    }
+  };
+  enviar_datos=function()
+  {
+    var tododia=comprobar_todoeldia();
+    var horadesde_ne=$('#hora_desde option:selected').html();
+    var horahasta_ne=$('#hora_hasta option:selected').html();
+    var id;
+    var resultado= $.ajax(
+    {
+      type: "POST",
+      url: "calendarios",
+      data: {nombre: $("#title").val(), descripcion: $("#descripcion").val(), evento_todoeldia: tododia, fecha_inicio: $("#desde").val(),hora_inicio: horadesde_ne, fecha_fin: $("#hasta").val(), hora_fin: horahasta_ne, color: rgb2hex($("#title").css("background-color")),_token:$("#token").attr("content")},
+      dataType: "text",
+      async:true,
+      error: function(jqXHR, textStatus, errorThrown)
+              {  
+                $('#dlg_error2').modal();
+              },
+      success: function(data,textStatus,jqXHR )
+              {
+                //alert("2");
+                var trama = $.parseJSON(jqXHR.responseText);
+                id = $.trim(trama.id);
+                if(isNaN(id)==false)
+                {
+                  //alert(dropdata.title);
+                  var originalEventObject = evento.data('eventObject');
+                  var nuevoevento = $.extend({}, originalEventObject);
+                  var fechadesde_nuevoevento = $( "#desde" ).val().split("-");
+                  var fechahasta_nuevoevento = $( "#hasta" ).val().split("-");
+                  var horadesde_ne=$('#hora_desde option:selected').html().split(":");
+                  var horahasta_ne=$('#hora_hasta option:selected').html().split(":");
+                  nuevoevento.start = new Date(fechadesde_nuevoevento[2],fechadesde_nuevoevento[1]-1,fechadesde_nuevoevento[0],horadesde_ne[0],horadesde_ne[1]);
+                  //alert(nuevoevento.start);
+                  //alert(horadesde_ne[0]);
+                  nuevoevento.end = new Date(fechahasta_nuevoevento[2],fechahasta_nuevoevento[1]-1,fechahasta_nuevoevento[0],horahasta_ne[0],horahasta_ne[1]);
+                  //nuevoevento.allDay = allday;
+                  //alert(nuevoevento.end);
+                  if($("#evento_todoeldia").is(":checked"))
+                  {
+                    nuevoevento.allDay=true;
+                  }
+                  else
+                  {
+                    nuevoevento.allDay=false;
+                  }
+                  //nuevoevento.allDay=evento_allday;
+                  nuevoevento.title=$("#title").val();
+                  nuevoevento.backgroundColor = $("#title").css("background-color");
+                  nuevoevento.borderColor = $("#title").css("background-color");
+                  nuevoevento.fechainicio="'"+fechadesde_nuevoevento[2]+"-"+(fechadesde_nuevoevento[1]-1)+"-"+fechadesde_nuevoevento[0]+"'";
+                  nuevoevento.fechafin="'"+fechahasta_nuevoevento[2]+"-"+(fechahasta_nuevoevento[1]-1)+"-"+fechahasta_nuevoevento[0]+"'";
+                  nuevoevento.horainicio=$('#hora_desde option:selected').html();
+                  nuevoevento.horafin=$('#hora_hasta option:selected').html();
+                  nuevoevento.id=id;
+                  nuevoevento.descripcion=$("#descripcion").val();
+                  $('#calendar').fullCalendar('renderEvent', nuevoevento, true);
+                  if ($('#drop-remove').is(':checked')) 
+                  {
+                    evento.remove();
+                  }
+                  $('#dlg_evento').modal('toggle');
+                }
+              },
+      complete: function(jqXHR,textStatus)
+              {
+                //alert("3");
+              }
+    }).responseText;
+    //alert(resultado);
+    //alert($("#desde").val());
+  };
+  eliminar_evento=function(idev)
+  {
+    var resultado= $.ajax(
+    {
+      type: "POST",
+      url: "calendarios/delete",
+      data: {id:idev,_token:$("#token").attr("content")},
+      dataType: "text",
+      async:true,
+      error: function(jqXHR, textStatus, errorThrown)
+              {  
+                $('#dlg_error3').modal();
+              },
+      success: function(data,textStatus,jqXHR )
+              {
+                $("#calendar").fullCalendar('removeEvents',evento_sel.id);
+                $('#dlg_eventomod').modal('toggle');              
+              },
+      complete: function(jqXHR,textStatus)
+              {
+                //alert("3");
+              }
+    }).responseText;
+    //alert(resultado);
+    //alert($("#desde").val());
+  };
+  agregacero=function(i) 
+  {
+    if (i < 10) 
+    {
+      i = "0" + i;
+    }
+    return i;
+  };
+  modificar_evento=function(idev)
+  {
+    //alert(idev);
+    var tododia=comprobar_todoeldiamod();
+    var horadesde_ne=$('#hora_desdemod option:selected').html();
+    var horahasta_ne=$('#hora_hastamod option:selected').html();
+    var resultado= $.ajax(
+    {
+      type: "POST",
+      url: "calendarios/update",
+      data: {id:idev,nombre: $("#titlemod").val(), descripcion: $("#descripcionmod").val(), evento_todoeldia: tododia, fecha_inicio: $("#desdemod").val(),hora_inicio: horadesde_ne, fecha_fin: $("#hastamod").val(), hora_fin: horahasta_ne, color: rgb2hex($("#titlemod").css("background-color")),_token:$("#token").attr("content")},
+      dataType: "text",
+      async:true,
+      error: function(jqXHR, textStatus, errorThrown)
+              {  
+                $('#dlg_error4').modal();
+              },
+      success: function(data,textStatus,jqXHR )
+              {
+                var allday=false;
+                var nuevoevento = evento_sel;
+                var fechadesde_nuevoevento = $( "#desdemod" ).val().split("-");
+                var fechahasta_nuevoevento = $( "#hastamod" ).val().split("-");
+                var horadesde_ne=$('#hora_desdemod option:selected').html().split(":");
+                var horahasta_ne=$('#hora_hastamod option:selected').html().split(":");
+                if($("#evento_todoeldiamod").is(":checked"))
+                {
+                  allday=true;
+                }
+                else
+                {
+                  allday=false;
+                }
+                var objeto={
+                  id: evento_sel.id,
+                  title: $("#titlemod").val(),
+                  descripcion: $("#descripcionmod").val(),
+                  start: new Date(fechadesde_nuevoevento[2],fechadesde_nuevoevento[1]-1,fechadesde_nuevoevento[0],horadesde_ne[0],horadesde_ne[1]),
+                  end: new Date(fechahasta_nuevoevento[2],fechahasta_nuevoevento[1]-1,fechahasta_nuevoevento[0],horahasta_ne[0],horahasta_ne[1]),
+                  allDay: allday,
+                  fechainicio: "'"+fechadesde_nuevoevento[2]+"-"+(fechadesde_nuevoevento[1]-1)+"-"+fechadesde_nuevoevento[0]+"'",
+                  fechafin: "'"+fechahasta_nuevoevento[2]+"-"+(fechahasta_nuevoevento[1]-1)+"-"+fechahasta_nuevoevento[0]+"'",
+                  horainicio:$('#hora_desdemod option:selected').html(),
+                  horafin:$('#hora_hastamod option:selected').html(),
+                  backgroundColor:$("#titlemod").css("background-color"),
+                  borderColor:$("#titlemod").css("background-color")
+                };
+                $('#calendar').fullCalendar('removeEvents',evento_sel.id);
+                $('#calendar').fullCalendar('renderEvent', objeto, true);
+                $("#calendar").fullCalendar('rerenderEvents');
+                $('#dlg_eventomod').modal('toggle');
+                //$("#calendar").fullCalendar('clientEvents',function(events){alert(events.start);});
+              },
+      complete: function(jqXHR,textStatus)
+              {
+                //alert("3");
+              }
+    }).responseText;
+    //alert(resultado);
+    //alert($("#desde").val());
+  }
+});
+$(function () {
+
+    /* initialize the external events
+     -----------------------------------------------------------------*/
+    function ini_events(ele) {
+      ele.each(function () {
+
+        // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+        // it doesn't need to have a start or end
+        var eventObject = {
+          title: $.trim($(this).text()) // use the element's text as the event title
+        };
+
+        // store the Event Object in the DOM element so we can get to it later
+        $(this).data('eventObject', eventObject);
+
+        // make the event draggable using jQuery UI
+        $(this).draggable({
+          zIndex: 1070,
+          revert: true, // will cause the event to go back to its
+          revertDuration: 0  //  original position after the drag
+        });
+
+      });
+    }
+
+    ini_events($('#external-events div.external-event'));
+
+    /* initialize the calendar
+     -----------------------------------------------------------------*/
+    //Date for the calendar events (dummy data)
+    var date = new Date();
+    var d = date.getDate(),
+        m = date.getMonth(),
+        y = date.getFullYear();
+    $('#calendar').fullCalendar({
+      monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+      monthNamesShort: ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
+      dayNames: ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'],
+      dayNamesShort: ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],
+      header: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'month,agendaWeek,agendaDay'
+      },
+      dayClick: function(date, jsEvent, view) 
+      {
+        $("#calendar").fullCalendar('gotoDate',date.format());
+        $("#calendar").fullCalendar('changeView','agendaDay');
+        //alert('Clicked on: ' + date.format());
+        //alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+        //alert('Current view: ' + view.name);
+        // change the day's background color just for fun
+        //$(this).css('background-color', 'red');
+
+      },
+      eventClick: function(calEvent, jsEvent, view) 
+      {
+        //alert('Event: ' + calEvent.descripcion);
+        //alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+        //alert('View: ' + view.name);
+        // change the border color just for fun
+        //$(this).css('border-color', 'red');
+        evento_sel=calEvent;
+        fi=calEvent.fechainicio.split("-");
+        //alert(calEvent.fechainicio);
+        ff=calEvent.fechafin.split("-");
+        //idevento=calEvent.id;
+        $("#descripcionmod").val(calEvent.descripcion);
+        $("#titlemod").val(calEvent.title);
+        $("#titlemod").css("background-color",calEvent.backgroundColor);
+        $("#titlemod").css("color","white");
+        $("#titlemod").css("font-weight","bolder");
+        $("#desdemod").val(fi[2]+"-"+fi[1]+"-"+fi[0]);
+        $("#hastamod").val(ff[2]+"-"+ff[1]+"-"+ff[0]);
+        if(calEvent.allDay==true)
+        {
+          $("#evento_todoeldiamod").prop('checked',true);
+          $("#cont_hora_desdemod").hide();
+          $("#cont_hora_hastamod").hide();
+          $("#hora_desdemod").val(0);
+          $("#hora_hastamod").val(0);
+        }
+        else
+        {
+          $("#evento_todoeldiamod").prop('checked',false);
+          $("#cont_hora_desdemod").show();
+          $("#cont_hora_hastamod").show();  
+          $("#hora_desdemod").val(seleccionavalor(calEvent.horainicio));
+          $("#hora_hastamod").val(seleccionavalor(calEvent.horafin));        
+        }
+        $('#dlg_eventomod').modal();
+        //$("#calendar").fullCalendar('removeEvents',calEvent.id);
+      },
+      buttonText: {
+        today: 'Hoy',
+        month: 'Mes',
+        week: 'Semana',
+        day: 'Día'
+      },
+        @if(count($calendarios))
+              events: [
+          @foreach($calendarios as $evento)
+          {
+            <?php 
+              $arr1=explode("-",$evento->fecha_desde);
+              $arr2=explode("-",$evento->fecha_hasta);
+              $horai=explode(":",$evento->hora_desde);
+              $horaf=explode(":",$evento->hora_hasta); 
+            ?>
+            id:'{{ $evento->id }}',
+            title: '{{ $evento->nombre }}',
+            descripcion: '{{ $evento->descripcion }}',
+            start:new Date({{ $arr1[0] }},{{$arr1[1]}}-1,{{$arr1[2]}},{{$horai[0]}},{{$horai[1]}}),
+            fechainicio:'{{ $evento->fecha_desde }}',
+            fechafin: '{{ $evento->fecha_hasta }}',
+            end:new Date({{$arr2[0]}},{{$arr2[1]}}-1,{{$arr2[2]}},{{$horaf[0]}},{{$horaf[1]}}),
+            @if($evento->todoeldia==0)
+              allDay: false,
+              horainicio: '{{ $evento->hora_desde }}',
+              horafin: '{{ $evento->hora_hasta }}',
+            @else
+              allDay: true,
+              horainicio: '',
+              horafin: '',
+            @endif
+            backgroundColor:"{{ $evento->color }}",
+            borderColor:"{{ $evento->color }}"
+          },
+          @endforeach
+          ],
+        @endif
+      editable: true,
+      droppable: true, // this allows things to be dropped onto the calendar !!!
+      drop: function (date, allDay) { // this function is called when something is dropped
+        evento=$(this);
+        var dropdata = evento.data('eventObject');
+        //alert($(this).css("background-color"));
+        inicializarfecha(date.format("DD-MM-YYYY"),dropdata.title,$(this).css("background-color"));
+        $('#dlg_evento').modal();
+      },
+      eventDragStart:function( event, jsEvent, ui, view ) 
+      { 
+      },
+      eventDragStop:function( event, jsEvent, ui, view ) 
+      { 
+        if(encima==true)
+        {
+          encima=false;
+          var resultado= $.ajax(
+          {
+            type: "POST",
+            url: "calendarios/delete",
+            data: {id:event.id,_token:$("#token").attr("content")},
+            dataType: "text",
+            async:true,
+            error: function(jqXHR, textStatus, errorThrown)
+                    {  
+                      $('#dlg_error3').modal();
+                    },
+            success: function(data,textStatus,jqXHR )
+                    {
+                      $("#calendar").fullCalendar('removeEvents',event.id);
+                    },
+            complete: function(jqXHR,textStatus)
+                    {
+                      //alert("3");
+                    }
+          }).responseText;
+        }
+      },
+      eventDrop: function(event, delta, revertFunc, jsEvent, ui, view)
+      {
+        var fecha=event.start;
+        fecha=fecha.toString().split(" ");
+        var fecha2=event.end;
+        fecha2=fecha2.toString().split(" ");
+        var horadeinicio=fecha[4];
+        var fechadeinicio=fecha[3]+"-"+amesnumero(fecha[1])+"-"+fecha[2];
+        var horadefin=fecha2[4];
+        var fechadefin=fecha2[3]+"-"+amesnumero(fecha2[1])+"-"+fecha2[2];
+        var objeto={
+            id: event.id,
+            title: event.title,
+            descripcion: event.descripcion,
+            start: event.start,
+            end: event.end,
+            allDay: event.allDay,
+            fechainicio: fechadeinicio,
+            fechafin: fechadefin,
+            horainicio:horadeinicio,
+            horafin:horadefin,
+            backgroundColor:event.backgroundColor,
+            borderColor:event.backgroundColor
+        };
+        var resultado= $.ajax(
+        {
+          type: "POST",
+          url: "calendarios/update",
+          data: {id:event.id,nombre: event.title, descripcion: event.descripcion, evento_todoeldia: event.allDay, fecha_inicio: fechadeinicio,hora_inicio: horadeinicio, fecha_fin: fechadefin, hora_fin: horadefin, color: event.backgroundColor,_token:$("#token").attr("content")},
+          dataType: "text",
+          async:true,
+          error: function(jqXHR, textStatus, errorThrown)
+              {  
+                var test = $.parseJSON(jqXHR.responseText);
+                //alert("1");
+              },
+          success: function(data,textStatus,jqXHR )
+              {
+                //alert("2");
+              },
+          complete: function(jqXHR,textStatus)
+              {
+                //alert("3");
+              }
+        }).responseText; 
+        $('#calendar').fullCalendar('removeEvents',event.id);
+        $('#calendar').fullCalendar('renderEvent', objeto, true);
+        $("#calendar").fullCalendar('rerenderEvents');      
+      }
+    });
+    
+    
+    $("#btn_eliminar_eventomod").click(function()
+    {
+      eliminar_evento(evento_sel.id);
+      //alert("hi");
+    });
+
+
+    $('#btn_guardar_evento').click(function()
+    {
+        var checado=false;
+        var mismodia=comprobar_mismodia();
+        if($("#evento_todoeldia").is(":checked"))
+        {
+          checado=true;
+        }
+        if(parseInt(horadesde.val())>=parseInt(horahasta.val()) && checado==false && mismodia==true)
+        {
+          $('#dlg_error').modal();
+        }
+        else if($("#desde").val()=="" || $("#hasta").val()=="" || $("#title").val()=="")
+        {
+          $('#dlg_error1').modal();
+        }
+        else
+        {
+          enviar_datos();
+        }
+    });
+
+
+    $('#btn_guardar_eventomod').click(function()
+    {
+        var checado=false;
+        var mismodia=comprobar_mismodiamod();
+        if($("#evento_todoeldiamod").is(":checked"))
+        {
+          checado=true;
+        }
+        if(horadesdemod.val()>=horahastamod.val() && checado==false && mismodia==true)
+        {
+          $('#dlg_error').modal();
+        }
+        else if($("#desdemod").val()=="" || $("#hastamod").val()=="" || $("#titlemod").val()=="")
+        {
+          $('#dlg_error1').modal();
+        }
+        else
+        {
+          modificar_evento(evento_sel.id);
+        }
+    });
+
+
+    $("#eliminarporarrastre").droppable({
+      tolerance:'pointer',
+      drop:function()
+      {
+        alert("hi");
+      },
+      eventDragStart:function()
+      {
+        alert("hu");
+      }
+    });
+
+    /* ADDING EVENTS */
+    var currColor = "#3c8dbc"; //Red by default
+    //Color chooser button
+    var colorChooser = $("#color-chooser-btn");
+    $("#color-chooser > li > a").click(function (e) {
+      e.preventDefault();
+      //Save color
+      currColor = $(this).css("color");
+      //Add color effect to button
+      $('#add-new-event').css({"background-color": currColor, "border-color": currColor});
+    });
+    $("#add-new-event").click(function (e) {
+      e.preventDefault();
+      //Get value and make sure it is not null
+      var val = $("#new-event").val();
+      if (val.length == 0) {
+        return;
+      }
+
+      //Create events
+      var event = $("<div />");
+      event.css({"background-color": currColor, "border-color": currColor, "color": "#fff"}).addClass("external-event");
+      event.html(val);
+      $('#external-events').prepend(event);
+
+      //Add draggable funtionality
+      ini_events(event);
+
+      //Remove event from text input
+      $("#new-event").val("");
+    });
+  });
+</script>

@@ -1,0 +1,18 @@
+<?php
+
+return [
+    'articles' => 'Articles',
+    'create_new_article' => 'Crear un articulo nuevo',
+    'content'   => 'Contenido',
+    'seo'       => 'SEO',
+    'gallery'   => 'Galería',
+    'publish'   => 'Publicar',
+    'primary_image' => 'Imagen primaria',
+    'msg_article_created' => 'Articulo creado',
+    'edit_article' => 'Editar Articulo',
+    'msg_article_updated' => 'Articulo actualizado!',
+    'unpublish' => 'No publicado',
+    'msg_article_published' => 'Articulo publicado!',
+    'msg_article_unpublished' => 'Articulo no publicado!',
+    'msg_article_deleted' => 'Articulo borrado!',
+];

@@ -1,0 +1,373 @@
+@extends('CMS::master')
+
+@section('content')
+  <meta id="token" name="csrf-token" content="{{ csrf_token() }}">
+    <link media="all" type="text/css" rel="stylesheet" href="https://almsaeedstudio.com/themes/AdminLTE/plugins/fullcalendar/fullcalendar.min.css" media="print">
+  <link rel="stylesheet" href="https://almsaeedstudio.com/themes/AdminLTE/plugins/fullcalendar/fullcalendar.print.css" media="print">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="https://almsaeedstudio.com/themes/AdminLTE/dist/css/AdminLTE.min.css">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="https://almsaeedstudio.com/themes/AdminLTE/dist/css/skins/_all-skins.min.css">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<section class="content">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="box box-solid">
+            <div class="box-header with-border">
+              <h4 class="box-title">Eventos arrastrables</h4>
+            </div>
+            <div class="box-body">
+              <!-- the events -->
+              <div id="external-events">
+                <div class="external-event bg-green ui-draggable ui-draggable-handle" style="position: relative;">Comer</div>
+                <div class="external-event bg-yellow ui-draggable ui-draggable-handle" style="position: relative;">Ir a casa</div>
+                <div class="external-event bg-aqua ui-draggable ui-draggable-handle" style="position: relative;">Hacer la tarea</div>
+                <div class="external-event bg-light-blue ui-draggable ui-draggable-handle" style="position: relative;">Trabajar en el diseño</div>
+                <div class="external-event bg-red ui-draggable ui-draggable-handle" style="position: relative;">Dormir</div>
+                <div class="checkbox">
+                  <label for="drop-remove">
+                    <input type="checkbox" id="drop-remove">
+                    eliminar después de agregar
+                  </label>
+                </div>
+              </div>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /. box -->
+          <div class="box box-solid">
+            <div class="box-header with-border">
+              <h3 class="box-title">Crear Evento</h3>
+            </div>
+            <div class="box-body">
+              <div class="btn-group" style="width: 100%; margin-bottom: 10px;">
+                <!--<button type="button" id="color-chooser-btn" class="btn btn-info btn-block dropdown-toggle" data-toggle="dropdown">Color <span class="caret"></span></button>-->
+                <ul class="fc-color-picker" id="color-chooser">
+                  <li><a class="text-aqua" href="#"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-blue" href="#"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-light-blue" href="#"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-teal" href="#"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-yellow" href="#"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-orange" href="#"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-green" href="#"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-lime" href="#"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-red" href="#"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-purple" href="#"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-fuchsia" href="#"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-muted" href="#"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-navy" href="#"><i class="fa fa-square"></i></a></li>
+                </ul>
+              </div>
+              <!-- /btn-group -->
+              <div class="input-group">
+                <input id="new-event" type="text" class="form-control" placeholder="Agregar título evento">
+
+                <div class="input-group-btn">
+                  <button id="add-new-event" type="button" class="btn btn-primary btn-flat">Agregar</button>
+                </div>
+                <!-- /btn-group -->
+              </div>
+              <!-- /input-group -->
+            </div>
+          </div>
+
+          <div class="box box-solid" id="eliminarporarrastre">
+            <div class="box-header with-border">
+              <h3 class="box-title">Arrastra aqui para eliminar</h3>
+            </div>
+            <div class="box-body">
+              <!-- /btn-group -->
+              <div class="input-group">
+
+                <!-- /btn-group -->
+              </div>
+              <!-- /input-group -->
+            </div>
+          </div>
+
+
+
+        </div>
+        <!-- /.col -->
+        <div class="col-md-9">
+          <div class="box box-primary">
+            <div class="box-body no-padding">
+              <!-- THE CALENDAR -->
+              <div id="calendar" class="fc fc-ltr fc-unthemed"></div>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /. box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+    <div class="modal fade" id="dlg_evento" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Nuevo Evento</h4>
+          </div>
+          
+          <div class="modal-body">
+            <form id="frm_agregar_evento" action="index_submit" method="get" accept-charset="utf-8">
+              {!! Field::text('Nombre*', null, ['id' => 'title']) !!}
+              {!! Field::textarea('Descripción', null, ['id' => 'descripcion','rows'=>'2']) !!}
+              
+              <input type="checkbox" id="evento_todoeldia" onclick="todoeldia()" onchange="todoeldia()" value="1"> <label for="evento_todoeldia">&nbsp;Evento todo el dia</label>
+              </br></br>
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-2">
+                    {!! Field::text('Desde*', null, ['id' => 'desde','readonly'=>'true']) !!}
+                  </div>
+                  <div class="col-md-1" id="cont_hora_desde">
+                    <label for="Hora_desde">Hora</label></br>
+                    <select id="hora_desde" name="Hora_desde">
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-2">
+                    {!! Field::text('Hasta*', null, ['id' => 'hasta','readonly'=>'true']) !!}
+                  </div>
+                  <div class="col-md-1" id="cont_hora_hasta">
+                    <label for="Hora_hasta">Hora</label></br>
+                    <select id="hora_hasta" name="Hora_hasta">
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+          <div class="box box-solid">
+            <div class="box-body">
+              <div class="btn-group" style="width: 100%; margin-bottom: 10px;">
+              <label for="evento_color">Cambiar Color</label>
+                <ul class="fc-color-picker" id="evento_color">
+                  <li><a class="text-aqua" href="#" onclick="cambiacolor('text-aqua')"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-blue" href="#" onclick="cambiacolor('text-blue')"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-light-blue" href="#" onclick="cambiacolor('text-light-blue')"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-teal" href="#" onclick="cambiacolor('text-teal')"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-yellow" href="#" onclick="cambiacolor('text-yellow')"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-orange" href="#" onclick="cambiacolor('text-orange')"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-green" href="#" onclick="cambiacolor('text-green')"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-lime" href="#" onclick="cambiacolor('text-lime')"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-red" href="#" onclick="cambiacolor('text-red')"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-purple" href="#" onclick="cambiacolor('text-purple')"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-fuchsia" href="#" onclick="cambiacolor('text-fuchsia')"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-muted" href="#" onclick="cambiacolor('text-muted')"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-navy" href="#" onclick="cambiacolor('text-navy')"><i class="fa fa-square"></i></a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+            </form>
+          </div>
+          
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+            <button type="button" id="btn_guardar_evento" class="btn btn-primary">Guardar Evento</button>
+          </div>
+        
+        </div>
+      </div>
+    </div>
+
+       <div class="modal fade" id="dlg_error" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Error de nuevo evento</h4>
+          </div>
+          
+          <div class="modal-body">
+            La hora de inicio es menor a la hora final.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>
+          </div>
+
+        </div>
+      </div>
+      </div>
+
+
+       <div class="modal fade" id="dlg_error2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Error de nuevo evento</h4>
+          </div>
+          
+          <div class="modal-body">
+            Ocurrio un error al agregar nuevo evento
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>
+          </div>
+
+        </div>
+      </div>
+      </div>
+
+       <div class="modal fade" id="dlg_error3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Error al eliminar evento</h4>
+          </div>
+          
+          <div class="modal-body">
+            Ocurrio un error al eliminar el evento seleccionado
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>
+          </div>
+
+        </div>
+      </div>
+      </div>
+
+       <div class="modal fade" id="dlg_error4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Error al modificar evento</h4>
+          </div>
+          
+          <div class="modal-body">
+            Ocurrio un error al modificar el elemento seleccionado
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>
+          </div>
+
+        </div>
+      </div>
+      </div>
+
+
+
+      <div class="modal fade" id="dlg_error1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Error de nuevo evento</h4>
+          </div>
+          
+          <div class="modal-body">
+            Para continuar llene los datos obligatorios (marcados con *).
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>
+          </div>
+
+        </div>
+      </div>
+      </div>
+
+
+
+
+
+
+
+    <div class="modal fade" id="dlg_eventomod" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Modificar Evento</h4>
+          </div>
+          
+          <div class="modal-body">
+            <form id="frm_agregar_eventomod" action="index_submit" method="get" accept-charset="utf-8">
+              {!! Field::text('Nombre*', null, ['id' => 'titlemod']) !!}
+              {!! Field::textarea('Descripción', null, ['id' => 'descripcionmod','rows'=>'2']) !!}
+              
+              <input type="checkbox" id="evento_todoeldiamod" onclick="todoeldia()" onchange="todoeldia()" value="1"> <label for="evento_todoeldia">&nbsp;Evento todo el dia</label>
+              </br></br>
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-2">
+                    {!! Field::text('Desde*', null, ['id' => 'desdemod','readonly'=>'true']) !!}
+                  </div>
+                  <div class="col-md-1" id="cont_hora_desdemod">
+                    <label for="Hora_desde">Hora</label></br>
+                    <select id="hora_desdemod" name="Hora_desde">
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-2">
+                    {!! Field::text('Hasta*', null, ['id' => 'hastamod','readonly'=>'true']) !!}
+                  </div>
+                  <div class="col-md-1" id="cont_hora_hastamod">
+                    <label for="Hora_hasta">Hora</label></br>
+                    <select id="hora_hastamod" name="Hora_hasta">
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+          <div class="box box-solid">
+            <div class="box-body">
+              <div class="btn-group" style="width: 100%; margin-bottom: 10px;">
+              <label for="evento_color">Cambiar Color</label>
+                <ul class="fc-color-picker" id="evento_colormod">
+                  <li><a class="text-aqua" href="#" onclick="cambiacolormod('text-aqua')"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-blue" href="#" onclick="cambiacolormod('text-blue')"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-light-blue" href="#" onclick="cambiacolormod('text-light-blue')"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-teal" href="#" onclick="cambiacolormod('text-teal')"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-yellow" href="#" onclick="cambiacolormod('text-yellow')"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-orange" href="#" onclick="cambiacolormod('text-orange')"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-green" href="#" onclick="cambiacolormod('text-green')"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-lime" href="#" onclick="cambiacolormod('text-lime')"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-red" href="#" onclick="cambiacolormod('text-red')"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-purple" href="#" onclick="cambiacolormod('text-purple')"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-fuchsia" href="#" onclick="cambiacolormod('text-fuchsia')"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-muted" href="#" onclick="cambiacolormod('text-muted')"><i class="fa fa-square"></i></a></li>
+                  <li><a class="text-navy" href="#" onclick="cambiacolormod('text-navy')"><i class="fa fa-square"></i></a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+            </form>
+          </div>
+          
+          <div class="modal-footer">
+            <button type="button" id="btn_eliminar_eventomod" class="btn btn-danger">Eliminar evento</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+            <button type="button" id="btn_guardar_eventomod" class="btn btn-primary">Guardar Evento</button>
+          </div>
+        
+        </div>
+      </div>
+    </div>
+@endsection
+@section('scripts')
+    @include('CMS::calendarios.partials.scripts')
+@endsection

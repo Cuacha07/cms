@@ -1,0 +1,18 @@
+<?php
+
+return [
+    'calendarios' => 'Calendarios',
+    'create_new_calendario' => 'Crear un articulo nuevo',
+    'content'   => 'Contenido',
+    'seo'       => 'SEO',
+    'gallery'   => 'Galería',
+    'publish'   => 'Publicar',
+    'primary_image' => 'Imagen primaria',
+    'msg_calendario_created' => 'Articulo creado',
+    'edit_calendario' => 'Editar Articulo',
+    'msg_calendario_updated' => 'Articulo actualizado!',
+    'unpublish' => 'No publicado',
+    'msg_calendario_published' => 'Articulo publicado!',
+    'msg_calendario_unpublished' => 'Articulo no publicado!',
+    'msg_calendario_deleted' => 'Articulo borrado!',
+];

@@ -1,0 +1,12 @@
+<?php
+
+namespace Nhitrort90\CMS\Modules\Articles;
+
+use Illuminate\Database\Eloquent\Model;
+use Nhitrort90\CMS\Modules\Lib\PresentableTrait;
+use Nhitrort90\CMS\Modules\Articles\ArticlePresenter;
+
+class Article extends Model
+{
+
+}

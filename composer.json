@@ -1,0 +1,31 @@
+{
+    "name": "nhitrort90/cms",
+    "description": "Reactor CMS with  Laravel 5.1",
+    "keywords": ["Laravel", "CMS", "PHP"],
+    "version": "0",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Hugo Rivera",
+            "email": "hurive90@gmail.com",
+            "twitter": "@hugo_knihtr"
+        }
+    ],
+    "scripts": {
+        "post-install-cmd": [
+            "php artisan vendor:publish",
+            "php artisan migrate"
+        ],
+        "post-update-cmd": [
+            "php artisan vendor:publish"
+        ]
+    },
+    "require": {
+        "laravelcollective/html": "~5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Nhitrort90\\CMS\\": "src/"
+        }
+    }
+}
