@@ -40,7 +40,7 @@ class StartCommand extends Command
     public function handle()
     {
         $this->info('*********************************');
-        $this->info('Thanks for install Simple CMS.');
+        $this->info('Thanks for install Komvac CMS.');
         $this->info('Created by @nhitrort90_89');
         $this->info('*********************************');
 
