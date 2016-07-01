@@ -390,7 +390,7 @@ class CreateModule extends Command
     {
         if(File::put(__DIR__.'/../stubs/'.$datos['pnombremodulo'].'.stub',$this->copiarContenido('migrations', $datos['nombremodulo'], $datos['nombremodulo2']))!==false)
         {
-            if(File::put(__DIR__.'/../../../../../database/migrations/'.date('y_m_d').'_000000_create_cms_'.$datos['pnombremodulo'].'_table.php',$this->copiarContenido('migrations', $datos['nombremodulo'], $datos['nombremodulo2']))!==false)
+            if(File::put(database_path().'/migrations/'.date('y_m_d').'_000000_create_cms_'.$datos['pnombremodulo'].'_table.php',$this->copiarContenido('migrations', $datos['nombremodulo'], $datos['nombremodulo2']))!==false)
             {
                 return true;
             }
@@ -402,7 +402,7 @@ class CreateModule extends Command
     {
         if(File::put(__DIR__.'/../stubs/'.$datos['pnombremodulo'].'.stub',$this->copiarContenido_calendario('migrations', $datos['nombremodulo']))!==false)
         {
-            if(File::put(__DIR__.'/../../../../../database/migrations/'.date('y_m_d').'_000000_create_cms_'.$datos['pnombremodulo'].'_table.php',$this->copiarContenido_calendario('migrations', $datos['nombremodulo']))!==false)
+            if(File::put(database_path().'/migrations/'.date('y_m_d').'_000000_create_cms_'.$datos['pnombremodulo'].'_table.php',$this->copiarContenido_calendario('migrations', $datos['nombremodulo']))!==false)
             {
                 return true;
             }
@@ -414,14 +414,13 @@ class CreateModule extends Command
     {
         if(File::put(__DIR__.'/../stubs/'.$datos['pnombremodulo'].'.stub',$this->copiarContenido_vacio('migrations', $datos['nombremodulo']))!==false)
         {
-            if(File::put(__DIR__.'/../../../../../database/migrations/'.date('y_m_d').'_000000_create_cms_'.$datos['pnombremodulo'].'_table.php',$this->copiarContenido_vacio('migrations', $datos['nombremodulo']))!==false)
+            if(File::put(database_path().'/migrations/'.date('y_m_d').'_000000_create_cms_'.$datos['pnombremodulo'].'_table.php',$this->copiarContenido_vacio('migrations', $datos['nombremodulo']))!==false)
             {
                 return true;
             }
         }
         return false;
     }
-
 
     protected function crear_modules($datos)
     {
