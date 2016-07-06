@@ -14,12 +14,7 @@ use Schema;
 
 class DeleteModule extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'cms:deletemodule';
+ protected $signature = 'cms:deletemodule';
 
     /**
      * The console command description.
@@ -53,20 +48,34 @@ class DeleteModule extends Command
     {
         $data = [];
         $data['nombremodulo'] = $this->ask('Cual es el nombre del modulo? (Escribelo en singular)');
-        if(!File::exists(__DIR__.'/../views/'.$data['nombremodulo']))
+        $data['nombremodulo']=strtolower($data['nombremodulo']);
+        $data['nombremodulomayus']=ucfirst($data['nombremodulo']);
+        $data['pnombremodulo']=$this->aplural(strtolower($data['nombremodulo']));
+        $data['pnombremodulomayus']=$this->aplural(ucfirst($data['nombremodulo']));
+        if(!File::exists(__DIR__.'/../views/'.$data['pnombremodulo']))
         {
             $this->info('El nombre de modulo no existe');
         }
         else
         {
-            $data['nombremodulo']=strtolower($data['nombremodulo']);
-            $data['nombremodulomayus']=ucfirst($data['nombremodulo']);
-            $data['pnombremodulo']=$this->aplural(strtolower($data['nombremodulo']));
-            $data['pnombremodulomayus']=$this->aplural(ucfirst($data['nombremodulo']));
-            //if (Schema::hasTable($data['nombremodulo'])===false)
             if($this->eliminarmodulo($data)==true)
-            {
-                $this->info('Modulo eliminado correctamente');
+            {            
+                if(Schema::hasTable('cms_'.$data['pnombremodulo'])===true)
+                {
+                    if($this->confirm("La tabla del modulo existe, deseas que el asistente la elimine? [y|N]"))
+                    {
+                        Schema::drop('cms_'.$data['pnombremodulo']);
+                        $this->info("El modulo seleccionado y su tabla han sido eliminados correctamente!!!");
+                    }
+                    else
+                    {
+                        $this->info('Modulo eliminado correctamente!!!');
+                    }
+                }
+                else
+                {
+                    $this->info('Modulo eliminado correctamente!!!');
+                }
             }
             else
             {
@@ -78,22 +87,14 @@ class DeleteModule extends Command
 
     protected function eliminarmodulo($datos)
     {
-        $_directorio_principal=true;
-        $_requests=true;
-        $_modules=true;
-        $_eliminar_migrations=true;
-        $_eliminar_language=true;
-        $_eliminar_controllers=true;
-        $_eliminar_routes=true;
-        $_eliminar_enlace_menu=true;
         $_directorio_principal=$this->eliminardirectorio_principal($datos);
-        //$_requests=$this->eliminar_requests($datos);
-        //$_modules=$this->eliminar_modules($datos);
-        //$_eliminar_migrations=$this->eliminar_migrations($datos);
-        //$_eliminar_language=$this->eliminar_language($datos);
-        //$_eliminar_controllers=$this->eliminar_controllers($datos);
-        //$_eliminar_routes=$this->eliminar_routes($datos);
-        //$_eliminar_enlace_menu=$this->eliminar_enlace_menu($datos);
+        $_requests=$this->eliminar_requests($datos);
+        $_modules=$this->eliminar_modules($datos);
+        $_eliminar_migrations=$this->eliminar_migrations($datos);
+        $_eliminar_language=$this->eliminar_language($datos);
+        $_eliminar_controllers=$this->eliminar_controllers($datos);
+        $_eliminar_routes=$this->eliminar_routes($datos);
+        $_eliminar_enlace_menu=$this->eliminar_enlace_menu($datos);
         if($_directorio_principal==true&&$_requests==true&&$_modules==true&&$_eliminar_migrations==true&&
             $_eliminar_language==true&&$_eliminar_controllers==true&&$_eliminar_routes==true&&$_eliminar_enlace_menu==true)
             {
@@ -104,8 +105,18 @@ class DeleteModule extends Command
 
     protected function eliminar_enlace_menu($datos)
     {
-        if(File::append(__DIR__.'/../views/partials/items_menu_lateral.blade.php',
-                "{!! CMS::makeLinkForSidebarMenu('CMS::admin.".$datos['pnombremodulo'].".index', trans('CMS::".$datos['pnombremodulo'].".".$datos['pnombremodulo']."'), 'fa fa-file') !!}")!==false)
+        $items=File::get(__DIR__.'/../views/partials/items_menu_lateral.blade.php');
+        
+        $arreglo=explode('{',$items);
+        $resultado="";
+        for($i=0;$i<count($arreglo);$i++)
+        {
+            if (!preg_match('/'.$datos['pnombremodulo'].'/',$arreglo[$i]) && trim($arreglo[$i])!="")
+            {
+                $resultado.="{".trim($arreglo[$i]);
+            }
+        }
+        if(File::put(__DIR__.'/../views/partials/items_menu_lateral.blade.php',$resultado)!==false)
         {
             return true;
         }
@@ -114,9 +125,7 @@ class DeleteModule extends Command
 
     protected function eliminar_routes($datos)
     {
-        if(File::put(__DIR__.'/../routes/'.$datos['nombremodulomayus'].'Routes.php',
-            "<?php
-            Route::resource('".$datos['pnombremodulo']."', '".$datos['pnombremodulomayus']."Controller');")==true)
+        if(File::delete(__DIR__.'/../routes/'.$datos['nombremodulomayus'].'Routes.php')==true)
         {
             return true;
         }
@@ -146,11 +155,21 @@ class DeleteModule extends Command
 
     protected function eliminar_migrations($datos)
     {
+        $archivos=glob(__DIR__.'/../../../../../database/migrations/*.php');
         if(File::delete(__DIR__.'/../stubs/'.$datos['pnombremodulo'].'.stub')==true)
         {
-            return true;
+            for($i=0;$i<count($archivos);$i++)
+            {
+                if(preg_match('/'.$datos['pnombremodulo'].'/',$archivos[$i]))
+                {
+                    if(File::delete($archivos[$i])==true)
+                    {
+                        return true;
+                    }
+                }
+            }
         }
-        return false;
+        return true;
     }
 
     protected function eliminar_modules($datos)
