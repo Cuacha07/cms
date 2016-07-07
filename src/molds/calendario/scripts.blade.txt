@@ -546,10 +546,15 @@ $(function () {
               $arr2=explode("-",$evento->fecha_hasta);
               $horai=explode(":",$evento->hora_desde);
               $horaf=explode(":",$evento->hora_hasta); 
+              $descripcion = preg_split('/$\R?^/m', $evento->descripcion);
             ?>
             id:'{{ $evento->id }}',
             title: '{{ $evento->nombre }}',
-            descripcion: '{{ $evento->descripcion }}',
+            descripcion:
+            @foreach($descripcion as $pdes)
+              '{{ $pdes }}\n'+
+            @endforeach
+            '',
             start:new Date({{ $arr1[0] }},{{$arr1[1]}}-1,{{$arr1[2]}},{{$horai[0]}},{{$horai[1]}}),
             fechainicio:'{{ $evento->fecha_desde }}',
             fechafin: '{{ $evento->fecha_hasta }}',
