@@ -280,6 +280,7 @@ class CreateModule extends Command
             Route::post('".$datos['pnombremodulo']."','".$datos['pnombremodulomayus']."Controller@store');
             Route::post('".$datos['pnombremodulo']."/delete','".$datos['pnombremodulomayus']."Controller@destroy');
             Route::post('".$datos['pnombremodulo']."/update','".$datos['pnombremodulomayus']."Controller@update');
+            Route::post('".$datos['pnombremodulo']."/resize','".$datos['pnombremodulomayus']."Controller@resize');
             Route::resource('".$datos['pnombremodulo']."', '".$datos['pnombremodulomayus']."Controller');")!==false)
         {
                 return true;
@@ -532,7 +533,10 @@ class CreateModule extends Command
             {
                 if(File::put(__DIR__.'/../Requests/Delete'.$datos['nombremodulomayus'].'.php', $this->copiarContenido_calendario('DeleteRequest', $datos['nombremodulo']))!==false)
                 {
-                    return true;
+                    if(File::put(__DIR__.'/../Requests/Resize'.$datos['nombremodulomayus'].'.php', $this->copiarContenido_calendario('ResizeRequest', $datos['nombremodulo']))!==false)
+                    {
+                        return true;
+                    }
                 }
             }
         }
@@ -853,6 +857,9 @@ class CreateModule extends Command
                 break;
             case 'UpdateRequest':
                 $contenido = File::get(__DIR__.'/../molds/calendario/updaterequest.txt');
+                break;
+            case 'ResizeRequest':
+                $contenido = File::get(__DIR__.'/../molds/calendario/resizerequest.txt');
                 break;
             case 'create.blade':
                 $contenido = File::get(__DIR__.'/../molds/calendario/create.blade.txt');
