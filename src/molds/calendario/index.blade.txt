@@ -2,9 +2,13 @@
 
 @section('content')
   <meta id="token" name="csrf-token" content="{{ csrf_token() }}">
-  <link media="all" type="text/css" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.8.0/fullcalendar.min.css" media="print">
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.8.0/fullcalendar.print.css" media="print">
+    <link media="all" type="text/css" rel="stylesheet" href="https://almsaeedstudio.com/themes/AdminLTE/plugins/fullcalendar/fullcalendar.min.css">
+
+  <link rel="stylesheet" href="https://almsaeedstudio.com/themes/AdminLTE/plugins/fullcalendar/fullcalendar.print.css" media="print">
+  <!-- Theme style -->
   <link rel="stylesheet" href="https://almsaeedstudio.com/themes/AdminLTE/dist/css/AdminLTE.min.css">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
   <link rel="stylesheet" href="https://almsaeedstudio.com/themes/AdminLTE/dist/css/skins/_all-skins.min.css">
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <section class="content">
@@ -178,7 +182,7 @@
       </div>
     </div>
 
-       <div class="modal fade" id="dlg_error" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+       <div class="modal fade" id="dlg_error" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="z-index: 10000000;">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           
@@ -199,7 +203,7 @@
       </div>
 
 
-       <div class="modal fade" id="dlg_error2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+       <div class="modal fade" id="dlg_error2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="z-index: 10000000;">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           
@@ -219,7 +223,7 @@
       </div>
       </div>
 
-       <div class="modal fade" id="dlg_error3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+       <div class="modal fade" id="dlg_error3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="z-index: 10000000;">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           
@@ -239,7 +243,7 @@
       </div>
       </div>
 
-       <div class="modal fade" id="dlg_error4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+       <div class="modal fade" id="dlg_error4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="z-index: 10000000;">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           
@@ -261,7 +265,7 @@
 
 
 
-      <div class="modal fade" id="dlg_error1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal fade" id="dlg_error1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="z-index: 10000000;">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           
@@ -301,7 +305,7 @@
               {!! Field::text('Nombre*', null, ['id' => 'titlemod']) !!}
               {!! Field::textarea('Descripción', null, ['id' => 'descripcionmod','rows'=>'2']) !!}
               
-              <input type="checkbox" id="evento_todoeldiamod" onclick="todoeldia()" onchange="todoeldia()" value="1"> <label for="evento_todoeldia">&nbsp;Evento todo el dia</label>
+              <input type="checkbox" id="evento_todoeldiamod" onclick="todoeldiamod()" onchange="todoeldiamod()" value="1"> <label for="evento_todoeldiamod">&nbsp;Evento todo el dia</label>
               </br></br>
               <div class="container">
                 <div class="row">
