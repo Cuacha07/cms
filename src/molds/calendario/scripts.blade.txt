@@ -1,15 +1,15 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
-<!--<script src="https://almsaeedstudio.com/themes/AdminLTE/plugins/fullcalendar/fullcalendar.min.js"></script>-->
-<script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.8.0/fullcalendar.min.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
+<script src="https://almsaeedstudio.com/themes/AdminLTE/plugins/fullcalendar/fullcalendar.min.js"></script>
 <script src="https://almsaeedstudio.com/themes/AdminLTE/dist/js/demo.js"></script>
 <script src="https://almsaeedstudio.com/themes/AdminLTE/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 <script>
 
 $(document).ready(function()
 {
-
     var i;
     var cadena="";
     horadesde=$('#hora_desde');
@@ -25,8 +25,7 @@ $(document).ready(function()
     $("#hora_desde").on('change',function()
     {
     });
-
-
+    //alert($('.ui-datepicker-month').css('background-color'));
     $("#hora_hasta").on('change',function()
     {
     });
@@ -175,6 +174,19 @@ $(document).ready(function()
       $("#cont_hora_hasta").show();
     }
   };
+  todoeldiamod=function()
+  {
+    if($("#evento_todoeldiamod").is(":checked"))
+    {
+      $("#cont_hora_desdemod").hide();
+      $("#cont_hora_hastamod").hide();
+    }
+    else
+    {
+      $("#cont_hora_desdemod").show();
+      $("#cont_hora_hastamod").show();
+    }
+  };
   comprobar_todoeldia=function()
   {
     if($("#evento_todoeldia").is(":checked"))
@@ -183,6 +195,16 @@ $(document).ready(function()
     }
     return 0;
   };
+  sumardias=function(incremento,fechafin)
+  {
+    var aux=fechafin;
+    aux=aux.split("-");
+    var fecha3=new Date(aux[0],parseInt(aux[1])-1,aux[2]);
+    var dias=parseInt(parseInt(incremento)*24*60*60*1000);
+    var mili=fecha3.getTime();
+    fecha3.setTime(mili+dias);
+    return fecha3;
+  }
   comprobar_todoeldiamod=function()
   {
     if($("#evento_todoeldiamod").is(":checked"))
@@ -289,7 +311,6 @@ $(document).ready(function()
               },
       success: function(data,textStatus,jqXHR )
               {
-                //alert("2");
                 var trama = $.parseJSON(jqXHR.responseText);
                 id = $.trim(trama.id);
                 if(isNaN(id)==false)
@@ -305,6 +326,7 @@ $(document).ready(function()
                   //alert(nuevoevento.start);
                   //alert(horadesde_ne[0]);
                   nuevoevento.end = new Date(fechahasta_nuevoevento[2],fechahasta_nuevoevento[1]-1,fechahasta_nuevoevento[0],horahasta_ne[0],horahasta_ne[1]);
+                  //alert(nuevoevento.end);
                   //nuevoevento.allDay = allday;
                   //alert(nuevoevento.end);
                   if($("#evento_todoeldia").is(":checked"))
@@ -319,8 +341,9 @@ $(document).ready(function()
                   nuevoevento.title=$("#title").val();
                   nuevoevento.backgroundColor = $("#title").css("background-color");
                   nuevoevento.borderColor = $("#title").css("background-color");
-                  nuevoevento.fechainicio="'"+fechadesde_nuevoevento[2]+"-"+(fechadesde_nuevoevento[1]-1)+"-"+fechadesde_nuevoevento[0]+"'";
-                  nuevoevento.fechafin="'"+fechahasta_nuevoevento[2]+"-"+(fechahasta_nuevoevento[1]-1)+"-"+fechahasta_nuevoevento[0]+"'";
+                  nuevoevento.fechainicio=fechadesde_nuevoevento[2]+"-"+(fechadesde_nuevoevento[1])+"-"+fechadesde_nuevoevento[0];
+                  //alert(nuevoevento.fechainicio);
+                  nuevoevento.fechafin=fechahasta_nuevoevento[2]+"-"+(fechahasta_nuevoevento[1])+"-"+fechahasta_nuevoevento[0];
                   nuevoevento.horainicio=$('#hora_desde option:selected').html();
                   nuevoevento.horafin=$('#hora_hasta option:selected').html();
                   nuevoevento.id=id;
@@ -330,6 +353,7 @@ $(document).ready(function()
                   {
                     evento.remove();
                   }
+                  //alert(nuevoevento.end);
                   $('#dlg_evento').modal('toggle');
                 }
               },
@@ -380,6 +404,7 @@ $(document).ready(function()
     //alert(idev);
     var tododia=comprobar_todoeldiamod();
     var horadesde_ne=$('#hora_desdemod option:selected').html();
+    //alert(horadesde);
     var horahasta_ne=$('#hora_hastamod option:selected').html();
     var resultado= $.ajax(
     {
@@ -415,8 +440,8 @@ $(document).ready(function()
                   start: new Date(fechadesde_nuevoevento[2],fechadesde_nuevoevento[1]-1,fechadesde_nuevoevento[0],horadesde_ne[0],horadesde_ne[1]),
                   end: new Date(fechahasta_nuevoevento[2],fechahasta_nuevoevento[1]-1,fechahasta_nuevoevento[0],horahasta_ne[0],horahasta_ne[1]),
                   allDay: allday,
-                  fechainicio: "'"+fechadesde_nuevoevento[2]+"-"+(fechadesde_nuevoevento[1]-1)+"-"+fechadesde_nuevoevento[0]+"'",
-                  fechafin: "'"+fechahasta_nuevoevento[2]+"-"+(fechahasta_nuevoevento[1]-1)+"-"+fechahasta_nuevoevento[0]+"'",
+                  fechainicio: fechadesde_nuevoevento[2]+"-"+(fechadesde_nuevoevento[1])+"-"+fechadesde_nuevoevento[0],
+                  fechafin: fechahasta_nuevoevento[2]+"-"+(fechahasta_nuevoevento[1])+"-"+fechahasta_nuevoevento[0],
                   horainicio:$('#hora_desdemod option:selected').html(),
                   horafin:$('#hora_hastamod option:selected').html(),
                   backgroundColor:$("#titlemod").css("background-color"),
@@ -545,15 +570,18 @@ $(function () {
               $arr1=explode("-",$evento->fecha_desde);
               $arr2=explode("-",$evento->fecha_hasta);
               $horai=explode(":",$evento->hora_desde);
-              $horaf=explode(":",$evento->hora_hasta); 
-              $descripcion = preg_split('/$\R?^/m', $evento->descripcion);
+              $horaf=explode(":",$evento->hora_hasta);
+              $trdesc=trim($evento->descripcion); 
+              $descripcion = preg_split('/$\R?^/m', $trdesc);
             ?>
             id:'{{ $evento->id }}',
             title: '{{ $evento->nombre }}',
             descripcion:
-            @foreach($descripcion as $pdes)
-              '{{ $pdes }}\n'+
-            @endforeach
+            @if(strlen($trdesc)>1)
+              @foreach($descripcion as $pdes)
+                '{{ $pdes }}\n'+
+              @endforeach
+            @endif
             '',
             start:new Date({{ $arr1[0] }},{{$arr1[1]}}-1,{{$arr1[2]}},{{$horai[0]}},{{$horai[1]}}),
             fechainicio:'{{ $evento->fecha_desde }}',
@@ -585,6 +613,7 @@ $(function () {
       },
       eventDragStart:function( event, jsEvent, ui, view ) 
       { 
+        //alert(event.fechafin);
       },
       eventDragStop:function( event, jsEvent, ui, view ) 
       { 
@@ -613,12 +642,44 @@ $(function () {
           }).responseText;
         }
       },
+      eventResize: function(event, delta, revertFunc) 
+      {
+        var fecha2=(event.allDay==true ? fecha3 : event.end);
+        fecha2= fecha2.toString().split(" ");
+        var horadefin=fecha2[4];
+        var fechadefin=fecha2[3]+"-"+amesnumero(fecha2[1])+"-"+fecha2[2];
+        var resultado= $.ajax(
+        {
+          type: "POST",
+          url: "calendarios/resize",
+          data: {id:event.id, fecha_fin: fechadefin, hora_fin: horadefin,_token:$("#token").attr("content")},
+          dataType: "text",
+          async:true,
+          error: function(jqXHR, textStatus, errorThrown)
+              {  
+                var test = $.parseJSON(jqXHR.responseText);
+                //alert("1");
+              },
+          success: function(data,textStatus,jqXHR )
+              {
+                //alert("2");
+              },
+          complete: function(jqXHR,textStatus)
+              {
+                //alert("3");
+              }
+        }).responseText;
+      },
       eventDrop: function(event, delta, revertFunc, jsEvent, ui, view)
       {
+        var incremento=delta.toString();
+        var signo=incremento.substring(0,1);
+        incremento=(signo=="-" ? "-"+incremento.substring(2,incremento.length-1) : incremento.substring(1,incremento.length-1));
         var fecha=event.start;
         fecha=fecha.toString().split(" ");
-        var fecha2=event.end;
-        fecha2=fecha2.toString().split(" ");
+        var fecha3=sumardias(incremento,event.fechafin);
+        var fecha2=(event.allDay==true ? fecha3 : event.end);
+        fecha2= fecha2.toString().split(" ");
         var horadeinicio=fecha[4];
         var fechadeinicio=fecha[3]+"-"+amesnumero(fecha[1])+"-"+fecha[2];
         var horadefin=fecha2[4];
@@ -628,7 +689,7 @@ $(function () {
             title: event.title,
             descripcion: event.descripcion,
             start: event.start,
-            end: event.end,
+            end: event.end || fecha3,
             allDay: event.allDay,
             fechainicio: fechadeinicio,
             fechafin: fechadefin,
@@ -637,11 +698,12 @@ $(function () {
             backgroundColor:event.backgroundColor,
             borderColor:event.backgroundColor
         };
+        var ad=(event.allDay==true ? 1 : 0);
         var resultado= $.ajax(
         {
           type: "POST",
           url: "calendarios/update",
-          data: {id:event.id,nombre: event.title, descripcion: event.descripcion, evento_todoeldia: event.allDay, fecha_inicio: fechadeinicio,hora_inicio: horadeinicio, fecha_fin: fechadefin, hora_fin: horadefin, color: event.backgroundColor,_token:$("#token").attr("content")},
+          data: {id:event.id,nombre: event.title, descripcion: event.descripcion, evento_todoeldia: ad, fecha_inicio: fechadeinicio,hora_inicio: horadeinicio, fecha_fin: fechadefin, hora_fin: horadefin, color: event.backgroundColor,_token:$("#token").attr("content")},
           dataType: "text",
           async:true,
           error: function(jqXHR, textStatus, errorThrown)
@@ -703,7 +765,7 @@ $(function () {
         {
           checado=true;
         }
-        if(horadesdemod.val()>=horahastamod.val() && checado==false && mismodia==true)
+        if(parseInt(horadesdemod.val())>=parseInt(horahastamod.val()) && checado==false && mismodia==true)
         {
           $('#dlg_error').modal();
         }
@@ -722,11 +784,11 @@ $(function () {
       tolerance:'pointer',
       drop:function()
       {
-        alert("hi");
+        //alert("hi");
       },
       eventDragStart:function()
       {
-        alert("hu");
+        //alert("hu");
       }
     });
 
