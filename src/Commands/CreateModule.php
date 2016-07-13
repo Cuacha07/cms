@@ -277,6 +277,9 @@ class CreateModule extends Command
     {
         if(File::put(__DIR__.'/../routes/'.$datos['nombremodulomayus'].'Routes.php',
             "<?php
+            Route::post('".$datos['pnombremodulo']."','".$datos['pnombremodulomayus']."Controller@store');
+            Route::post('".$datos['pnombremodulo']."/delete','".$datos['pnombremodulomayus']."Controller@destroy');
+            Route::post('".$datos['pnombremodulo']."/update','".$datos['pnombremodulomayus']."Controller@update');
             Route::resource('".$datos['pnombremodulo']."', '".$datos['pnombremodulomayus']."Controller');")!==false)
         {
                 return true;
