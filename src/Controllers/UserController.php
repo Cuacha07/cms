@@ -8,6 +8,7 @@ use Nhitrort90\CMS\Requests\CreateUserRequest;
 use Nhitrort90\CMS\Requests\UpdatePassRequest;
 use Nhitrort90\CMS\Requests\UpdateUserRequest;
 use Illuminate\Contracts\Auth\Guard;
+use Auth;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
@@ -59,7 +60,7 @@ class UserController extends Controller
         $this->uploadAvatar($request, $user);
 
         \Alert::success('CMS::users.msg_user_created');
-        return redirect()->route('CMS::admin.users.edit', $user->id);
+        return redirect()->route('CMS::users.edit', $user->id);
     }
 
     /**
@@ -101,7 +102,7 @@ class UserController extends Controller
         $this->uploadAvatar($request, $user);
 
         \Alert::success('CMS::users.msg_user_updated');
-        return redirect()->route('CMS::admin.users.edit', $user->id);
+        return redirect()->route('CMS::users.edit', $user->id);
     }
 
 
@@ -142,14 +143,14 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = $this->usersRepo->findOrFail($id);
-        if($user->id == $this->current_user->id)
+        if($user->id == Auth::user()->id)
         {
             \Alert::danger("CMS::users.msg_you_cant_delete_yourself");
             return redirect()->back();
         }
         $this->usersRepo->delete($user);
         \Alert::success("CMS::users.msg_user_deleted");
-        return redirect()->route('CMS::admin.users.index');
+        return redirect()->route('CMS::users.index');
     }
 
     public function editPassword($id)
@@ -164,7 +165,7 @@ class UserController extends Controller
         $user = $this->usersRepo->findOrFail($id);
         $this->usersRepo->update($user, $request->all());
         \Alert::success("CMS::users.msg_password_updated");
-        return redirect()->route('CMS::admin.users.edit', $user->id);
+        return redirect()->route('CMS::users.edit', $user->id);
     }
 
 
@@ -193,7 +194,7 @@ class UserController extends Controller
         }
         else
         {
-            if($user->id == $this->current_user->id)
+            if($user->id == Auth::user()->id)
             {
                 \Alert::danger("CMS::users.msg_you_cant_block_yourself");
                 return redirect()->back();
@@ -203,6 +204,6 @@ class UserController extends Controller
         }
         $this->usersRepo->save($user);
 
-        return redirect()->route('CMS::admin.users.edit', $user->id);
+        return redirect()->route('CMS::users.edit', $user->id);
     }
 }
