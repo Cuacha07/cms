@@ -2,7 +2,8 @@
 
 namespace Nhitrort90\CMS\Requests;
 
-use App\Http\Requests\Request;
+//use App\Http\Requests\Request;
+use Illuminate\Foundation\Http\FormRequest;
 
 class LoginRequest extends Request
 {
