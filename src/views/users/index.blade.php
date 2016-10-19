@@ -11,7 +11,7 @@
             <div class="box-header">
                 <h3 class="box-title"></h3>
                 <div class="box-tools pull-right">
-                    <a href="{{ route('CMS::admin.users.create') }}" class="btn bg-navy"><i class="fa fa-plus-circle"></i> @lang('CMS::core.create_new')</a>
+                    <a href="{{ route('CMS::users.create') }}" class="btn bg-navy"><i class="fa fa-plus-circle"></i> @lang('CMS::core.create_new')</a>
                 </div>
             </div>
             <div class="box-body">
@@ -39,7 +39,7 @@
                                         <span class="label label-danger">@lang('CMS::core.blocked')</span>
                                     @endif
                                 </td>
-                                <td><a href="{{ route('CMS::admin.users.edit', $user->id) }}" class="btn bg-orange btn-xs">@lang('CMS::core.details') <i class="fa fa-arrow-circle-right"></i></a></td>
+                                <td><a href="{{ route('CMS::users.edit', $user->id) }}" class="btn bg-orange btn-xs">@lang('CMS::core.details') <i class="fa fa-arrow-circle-right"></i></a></td>
                             </tr>
                         @empty
                             <tr class="active">
