@@ -7,24 +7,91 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head>
     <meta charset="UTF-8">
     <title>{{ config('cms.app_name') }}</title>
+    <meta id="token" name="csrf-token" content="{{ csrf_token() }}">
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <!-- Bootstrap 3.3.4 -->
     <link href="{{ cms_asset_path('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- Font Awesome Icons -->
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-    <!-- Ionicons -->
-    <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css" />
+    {!! Html::style('css/font-awesome.min.css') !!}
     <!-- Theme style -->
     <link href="{{ cms_asset_path('template/css/AdminLTE.min.css') }}" rel="stylesheet" type="text/css" />
 
     <link href="{{ cms_asset_path('template/css/skins/skin-' . config('cms.template_skin') . '.min.css') }}" rel="stylesheet" type="text/css" />
+    
+    {{-- /Public Extras
+    <!-- Sweet Alert -->
+    {!! Html::style('css/sweetalert.css') !!}
+    <!-- NotificationFx -->
+    {!! Html::style('css/notificationsFx/ns-default.css') !!}
+    {!! Html::style('css/notificationsFx/ns-style-bar.css') !!}
+    /Public Extras --}}
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <style>
+    .sidebar-menu>li>a {
+        padding: 12px 5px 12px 15px;
+        position: relative;
+        z-index: 1;
+        transition: .35s ease color;
+    }
+    .sidebar-menu>li>a::before{
+      content: '';
+      display: block;
+      z-index: -1;
+      position: absolute;
+      left: -100%; top: 0;
+      width: 100%; height: 100%;
+      border-right: solid 2px #367FA9;
+      background: #3C3735;
+      transition: .35s ease left;
+    }
+    .sidebar-menu>li>a:hover::before {
+        left: -2%;
+        width: 102%;
+    }
+
+    .sidebar-menu .treeview-menu>li>a {
+        padding: 12px 5px 12px 15px;
+        position: relative;
+        z-index: 1;
+        transition: .35s ease color;
+    }
+    .sidebar-menu .treeview-menu>li>a::before{
+      content: '';
+      display: block;
+      z-index: -1;
+      position: absolute;
+      left: -100%; top: 0;
+      width: 100%; height: 100%;
+      border-right: solid 2px #DF4500;
+      background: #3C3735;
+      transition: .35s ease left;
+    }
+    .sidebar-menu .treeview-menu>li>a:hover::before {
+        left: -2%;
+        width: 102%;
+    }
+
+    .form-control:hover {
+        border-color: #157D0A;
+    }
+
+    .form-control:focus {
+        outline:solid 1px #157D0A;
+        border: none;
+    }
+
+    .search.form-control:hover { border-color: none; }
+    .search.form-control:focus { outline: none; }
+
+    .table-bordered>tbody>tr>td { word-break: break-word;             border-right: none;
+            border-left: none; }
+
+    [v-cloak] {
+      display: none;
+    }
+
+    </style>
+
 </head>
 <body class="{{ cms_body_class() }}">
     <div class="wrapper">
@@ -98,7 +165,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <!-- REQUIRED JS SCRIPTS -->
     <!-- jQuery 2.1.4 -->
-    <script src="{{ cms_asset_path('plugins/jQuery/jQuery-2.1.4.min.js') }}"></script>
+    {!! Html::script('js/jquery-2.1.4.min.js') !!}
     <!-- Bootstrap 3.3.2 JS -->
     <script src="{{ cms_asset_path('bootstrap/js/bootstrap.min.js') }}" type="text/javascript"></script>
     <!-- AdminLTE App -->
@@ -110,54 +177,22 @@ scratch. This page gets rid of all links and provides the needed markup only.
           fixed layout. -->
     <!-- Slimscroll -->
     <script src="{{ cms_asset_path('plugins/slimScroll/jquery.slimscroll.js') }}" type="text/javascript"></script>
-    <!-- TinyCME -->
-    <script src="{{ cms_asset_path('plugins/tinymce/4.1/tinymce.min.js') }}" type="text/javascript"></script>
-    <!-- SlugifyJS -->
-    <script src="{{ cms_asset_path('plugins/slugify/jquery.slugify.js') }}" type="text/javascript"></script>
-    <script>
-        {!! MediaManager::initializeJs()  !!}
-        tinymce.init({
-            selector: "textarea.html-editor",
-            file_browser_callback : FileManagerBrowser,
-            theme: "modern",
-            height: 600,
-            relative_urls : false,
-            remove_script_host : false,
-            convert_urls : true,
-            plugins: [
-             "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
-             "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-             "save table contextmenu directionality emoticons template paste textcolor"
-            ],
-            // content_css: "css/content.css",
-            toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | formatselect | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons",
-            style_formats: [
-                {title: 'Bold text', inline: 'b'},
-                {title: 'Red text', inline: 'span', styles: {color: '#ff0000'}},
-                {title: 'Red header', block: 'h1', styles: {color: '#ff0000'}},
-                {title: 'Example 1', inline: 'span', classes: 'example1'},
-                {title: 'Example 2', inline: 'span', classes: 'example2'},
-                {title: 'Table styles'},
-                {title: 'Table row 1', selector: 'tr', classes: 'tablerow1'}
-            ]
-        });
-        function FileManagerBrowser(field_name, url, type, win)
-        {
-            tinymce.activeEditor.windowManager.open({
-                    file: media_manager.route,
-                    title: 'Media manager',
-                    width: 900,
-                    height: 450,
-                    resizable: 'yes',
 
-                }, {
-                window: win,
-                input: field_name
-            });
-            return true;
-        }
+    {{-- /Public Extras 
+    
+    <!-- SweetAlert -->
+    {!! Html::script('js/sweetalert.min.js') !!}
+    <!-- Modernizr for NotificationFx -->
+    {!! Html::script('js/notificationsFx/modernizr.custom.js') !!}
+    <!-- Classie for NotificationFx -->
+    {!! Html::script('js/notificationsFx/classie.js') !!}
+    <!-- NotificationFx -->
+    {!! Html::script('js/notificationsFx/notificationFx.js') !!}
+    <!-- Vue.js & Vue Http Resource -->
+    {!! Html::script('js/vue/vue.js') !!}
+    {!! Html::script('js/vue/vue-resource.min.js') !!}
 
-    </script>
+     /Public Extras --}}
 
     @yield('scripts')
 </body>
