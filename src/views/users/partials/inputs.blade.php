@@ -1,6 +1,6 @@
 {!! Field::text('name') !!}
 {!! Field::email('email') !!}
-{!! Field::select('type', $user_types) !!}
+{!! Field::select('type', $user_types, null, ['label' => 'Tipo/Rol']) !!}
 @if(!isset($user) or $user->avatar == null)
     {!! Field::file('avatar') !!}
 @else
