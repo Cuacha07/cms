@@ -2,9 +2,10 @@
 
 namespace Nhitrort90\CMS\Requests;
 
-use App\Http\Requests\Request;
+//use App\Http\Requests\Request; Ya no lo usa
+use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateUserRequest extends Request
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
