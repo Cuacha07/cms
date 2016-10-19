@@ -1,6 +1,6 @@
 # Komvac cms
 
-This is a PHP CMS powered by Laravel 5.1, it's based on Reactor CMS by gmlo89 (link: https://github.com/gmlo89/reactor-cms)
+This is a PHP CMS powered by Laravel 5.3, it's based on Reactor CMS by gmlo89 (link: https://github.com/gmlo89/reactor-cms)
 
 ## Modules included:
 
