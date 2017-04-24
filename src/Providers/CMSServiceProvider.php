@@ -40,7 +40,7 @@ class CMSServiceProvider extends ServiceProvider
 
         // Load our views
         $this->loadViewsFrom(__DIR__ . '/../views', 'CMS');
-        $router->middleware('CMSAuthenticate', 'Nhitrort90\CMS\Middleware\CMSAuthenticate');
+        $router->aliasMiddleware('CMSAuthenticate', 'Nhitrort90\CMS\Middleware\CMSAuthenticate');
 
         $this->app['config']->set('auth.model', 'Nhitrort90\CMS\Modules\Users\User');
 
@@ -56,26 +56,21 @@ class CMSServiceProvider extends ServiceProvider
     {
         include __DIR__ . '/../routes.php';
 
-        $this->app['cms'] = $this->app->share(function($app){
-           return new CMS();
+        $this->app->singleton('cms', function () {
+            return new CMS();
         });
 
-
-        $this->app['alert'] = $this->app->share(function($app)
-        {
+        $this->app->singleton('alert', function ($app) {
             $alertBuilder = new Alert($app['view'], $app['session.store']);
             return $alertBuilder;
         });
 
-
-        $this->app['field'] = $this->app->share(function($app)
-        {
+        $this->app->singleton('field', function ($app) {
             $fieldBuilder = new FieldBuilder($app['form'], $app['view'], $app['session.store']);
             return $fieldBuilder;
         });
 
-        $this->app['media_manager'] = $this->app->share(function($app)
-        {
+        $this->app->singleton('media_manager', function () {
             return new MediaManager();
         });
 
