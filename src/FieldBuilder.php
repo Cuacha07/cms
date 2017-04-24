@@ -217,7 +217,7 @@ class FieldBuilder
             $entity_route = strtolower($entity_class);
             $entity_route = str_plural($entity_route);
 
-            $route = 'CMS::admin.' . $entity_route . '.destroy';
+            $route = 'CMS::' . $entity_route . '.destroy';
 
         }
 
